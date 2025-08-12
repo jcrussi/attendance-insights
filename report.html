@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Participación y Encuesta - Informe Ejecutivo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            padding: 40px;
+            position: relative;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .company-logo {
+            height: 150px;
+            width: auto;
+            object-fit: contain;
+            padding: 15px;
+            border-radius: 12px;
+        }
+        
+        .header-text {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 40px;
+            background: #f8fafc;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #718096;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .satisfaction-section {
+            padding: 50px 40px;
+            background: white;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2d3748;
+        }
+        
+        .satisfaction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .satisfaction-card {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(72, 187, 120, 0.3);
+        }
+        
+        .satisfaction-score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        
+        .satisfaction-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+            gap: 5px;
+        }
+        
+        .star {
+            color: #ffd700;
+            font-size: 1.5rem;
+        }
+        
+        .demographics-section {
+            padding: 50px 40px;
+            background: #f7fafc;
+        }
+        
+        .demographics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .demo-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+        
+        .demo-value-container {
+            text-align: right;
+        }
+
+        .demo-context {
+            font-size: 0.75rem;
+            color: #718096;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        .demo-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2d3748;
+        }
+        
+        .demo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .demo-item:last-child {
+            border-bottom: none;
+        }
+        
+        .demo-label {
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .demo-value {
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .insights-section {
+            padding: 50px 40px;
+            background: white;
+        }
+
+        .insights-title {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .insight-item {
+            background: rgba(255,255,255,0.8);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            color: #2d3748;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .insight-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .insight-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .insight-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .insight-text {
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+        
+        .text-analysis-section {
+            padding: 50px 40px;
+            background: #f7fafc;
+        }
+        
+        .text-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        
+        .text-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-left: 4px solid #4299e1;
+        }
+        
+        .text-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+        
+        .text-stat {
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+        
+        .category-tag {
+            display: inline-block;
+            background: #edf2f7;
+            color: #4a5568;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 2px;
+            font-weight: 500;
+        }
+        
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        .footer-text {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .report-container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .stat-card:hover,
+            .insight-card:hover {
+                transform: none;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header .subtitle {
+                font-size: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .company-logo {
+                height: 100px;
+            }
+            
+            .stats-grid,
+            .satisfaction-grid,
+            .demographics-grid,
+            .insights-grid,
+            .text-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2.2rem;
+            }
+            
+            .satisfaction-score {
+                font-size: 2.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <img src="LogosHN_287x330.png" alt="Company Logo" class="company-logo">
+                <div class="header-text">
+                    <h1>Análisis de Participación y Encuesta</h1>
+                    <p class="subtitle">Informe Ejecutivo - Resultados Completos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">2,138</div>
+                <div class="stat-label">Total Asistentes</div>
+            </div>
+                        <div class="stat-card">
+                <div class="stat-number">12.3%</div>
+                <div class="stat-label">Tasa de Asistencia</div>
+                <div style="font-size: 0.8rem; color: #718096; margin-top: 5px;">
+                    2,138 de 17,379 invitados
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">175</div>
+                <div class="stat-label">Encuestas Completadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">58.9%</div>
+                <div class="stat-label">Cobertura de Feedback</div>
+                <div style="font-size: 0.8rem; color: #718096; margin-top: 5px;">
+                    103 de 175 respuestas completas
+                </div>
+            </div>
+        </div>
+
+        <!-- Satisfaction Scores -->
+        <div class="satisfaction-section">
+            <h2 class="section-title">🌟 Puntuaciones de Satisfacción</h2>
+            <div class="satisfaction-grid">
+                <div class="satisfaction-card">
+                    <div class="satisfaction-score">4.55</div>
+                    <div class="star-rating">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                    <div class="satisfaction-label">Feedback General</div>
+                    <div style="font-size: 0.9rem; opacity: 0.8; margin-top: 10px;">n=103 respuestas</div>
+                </div>
+                <div class="satisfaction-card">
+                    <div class="satisfaction-score">4.68</div>
+                    <div class="star-rating">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                    </div>
+                    <div class="satisfaction-label">Calidad del Video</div>
+                    <div style="font-size: 0.9rem; opacity: 0.8; margin-top: 10px;">n=103 respuestas</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demographics -->
+        <div class="demographics-section">
+            <h2 class="section-title">👥 Distribución Demográfica</h2>
+            <div class="demographics-grid">
+                <div class="demo-card">
+                    <div class="demo-title">📍 Por Zona Geográfica</div>
+                    <div class="demo-item">
+                        <span class="demo-label">Zona Centro</span>
+                        <div class="demo-value-container">
+                            <span class="demo-value">1,067 (16.0% tasa)</span>
+                            <div class="demo-context">de 6,686 invitados</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 16.0%"></div>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">Zona Antioquia</span>
+                        <div class="demo-value-container">
+                            <span class="demo-value">157 (14.1% tasa)</span>
+                            <div class="demo-context">de 1,116 invitados</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 14.1%"></div>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">Zona Ocidente</span>
+                        <div class="demo-value-container">
+                            <span class="demo-value">494 (11.9% tasa)</span>
+                            <div class="demo-context">de 4,160 invitados</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 11.9%"></div>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">Zona Norte</span>
+                        <div class="demo-value-container">
+                            <span class="demo-value">395 (7.9% tasa)</span>
+                            <div class="demo-context">de 5,014 invitados</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 7.9%"></div>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">Oficina de Soporte</span>
+                        <div class="demo-value-container">
+                            <span class="demo-value">25 (6.3% tasa)</span>
+                            <div class="demo-context">de 397 invitados</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 6.3%"></div>
+                    </div>
+                </div>
+
+                <div class="demo-card" style="grid-column: span 2;">
+                    <div class="demo-title">🏆 Rendimiento Regional Detallado</div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <div style="background: linear-gradient(135deg, #00b894, #00a085); color: white; padding: 8px 12px; border-radius: 6px; font-weight: 600; margin-bottom: 10px; font-size: 0.9rem;">
+                            🏆 Alto Rendimiento (>15%)
+                        </div>
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #00b894;">
+                            <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px;">
+                                <span>Región 4</span>
+                                <span style="color: #00b894;">16.5%</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #666;">472/2,868 participantes</div>
+                            <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">
+                                <strong>Perfil senior fuerte:</strong> 2-5y (38%) | 5-10y (27%) | <6m (21%)
+                            </div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 4px solid #00b894;">
+                            <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px;">
+                                <span>Región 3</span>
+                                <span style="color: #00b894;">16.1%</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #666;">438/2,717 participantes</div>
+                            <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">
+                                <strong>Distribución equilibrada:</strong> 2-5y (38%) | 5-10y (26%) | <6m (22%)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <div style="background: linear-gradient(135deg, #fdcb6e, #e17055); color: white; padding: 8px 12px; border-radius: 6px; font-weight: 600; margin-bottom: 10px; font-size: 0.9rem;">
+                            📈 Rendimiento Medio (12-15%)
+                        </div>
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #fdcb6e;">
+                            <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px;">
+                                <span>Región 11</span>
+                                <span style="color: #e17055;">14.7%</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #666;">156/1,062 participantes</div>
+                            <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">
+                                <strong>Dominancia 2-5y:</strong> 2-5y (50%) | 1-2y (17%) | 6-12m (15%)
+                            </div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #fdcb6e;">
+                            <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px;">
+                                <span>Región 1</span>
+                                <span style="color: #e17055;">13.4%</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #666;">227/1,701 participantes</div>
+                            <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">
+                                <strong>Experiencia veterana:</strong> 10y+ (21%) | 5-10y (30%) | 2-5y (29%)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div style="background: linear-gradient(135deg, #fd79a8, #e84393); color: white; padding: 8px 12px; border-radius: 6px; font-weight: 600; margin-bottom: 10px; font-size: 0.9rem;">
+                            ⚠️ Oportunidades de Mejora (<10%)
+                        </div>
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid #fd79a8;">
+                            <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px;">
+                                <span>Región 2</span>
+                                <span style="color: #e84393;">8.4%</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #666;">213/2,529 participantes</div>
+                            <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">
+                                <strong>Región grande subutilizada:</strong> 2-5y (36%) | 5-10y (36%)
+                            </div>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 4px solid #fd79a8;">
+                            <div style="display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 4px;">
+                                <span>Región 6</span>
+                                <span style="color: #e84393;">8.8%</span>
+                            </div>
+                            <div style="font-size: 0.8rem; color: #666;">135/1,528 participantes</div>
+                            <div style="font-size: 0.75rem; color: #888; margin-top: 4px;">
+                                <strong>Potencial no aprovechado:</strong> 2-5y (49%) | 5-10y (27%)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <div class="demo-title">📅 Por Antigüedad</div>
+                    <div class="demo-item">
+                        <span class="demo-label">2-5 años</span>
+                        <span class="demo-value">830 (38.8%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 38.8%"></div>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">5-10 años</span>
+                        <span class="demo-value">499 (23.3%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 23.3%"></div>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">&lt;6 meses</span>
+                        <span class="demo-value">372 (17.4%)</span>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">1-2 años</span>
+                        <span class="demo-value">233 (10.9%)</span>
+                    </div>
+                    <div style="margin-top: 15px; padding: 10px; background: #f0f8ff; border-radius: 8px; font-size: 0.85rem; color: #2d3748;">
+                        <strong>💡 Insight:</strong> Empleados 2-5 años son el segmento más activo
+                    </div>
+                </div>
+                                
+                <div class="demo-card">
+                    <div class="demo-title">⚖️ Por Género</div>
+                    <div class="demo-item">
+                        <span class="demo-label">Femenino</span>
+                        <span class="demo-value">1,234 (57.7%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 57.7%"></div>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">Masculino</span>
+                        <span class="demo-value">904 (42.3%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 42.3%"></div>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <div class="demo-title">🏢 Por Unidad de Negocio</div>
+                    <div class="demo-item">
+                        <span class="demo-label">ARA</span>
+                        <span class="demo-value">2,108 (98.6%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 98.6%"></div>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">BDC</span>
+                        <span class="demo-value">30 (1.4%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 1.4%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Regional Insights -->
+        <div class="insights-section">
+            <div class="insights-title">💡 Insights Clave y Recomendaciones</div>
+            
+            <div class="insight-item">
+                <strong>🎯 Segmento más activo:</strong> Empleados con 2-5 años de antigüedad representan el 38.8% de la participación total
+            </div>
+            
+            <div class="insight-item">
+                <strong>🏆 Benchmarks regionales:</strong> Regiones 3 y 4 mantienen >16% de participación con poblaciones grandes (>2,500 invitados)
+            </div>
+            
+            <div class="insight-item">
+                <strong>📊 Oportunidad de crecimiento:</strong> Región 2 tiene 2,529 invitados pero solo 8.4% participación - potencial para 200+ asistentes adicionales
+            </div>
+            
+            <div class="insight-item">
+                <strong>🔄 Patrón de nuevos empleados:</strong> Región 9 muestra alta participación de <6m (30%) indicando buen onboarding
+            </div>
+            
+            <div class="insight-item">
+                <strong>👥 Experiencia veterana:</strong> Región 1 es única con 21% de participación de empleados 10y+, modelo para retención senior
+            </div>
+        </div>
+
+        <!-- Text Analysis -->
+        <div class="text-analysis-section">
+            <h2 class="section-title">💬 Análisis Avanzado de Respuestas Textuales</h2>
+            <div class="text-grid">
+                <div class="text-card">
+                    <div class="text-title">🚫 Razones de No Participación</div>
+                    <div class="text-stat"><strong>71</strong> respuestas analizadas</div>
+                    <div class="text-stat">Promedio: <strong>4.8</strong> palabras</div>
+                    <div class="text-stat">Sentimiento: <strong>Neutral</strong> (91.5%) | Score: -0.07</div>
+                    <div style="margin-top: 15px;">
+                        <span class="category-tag">⏰ Tiempo/Disponibilidad (Principal)</span>
+                        <span class="category-tag">🔑 Keywords: estaba turno, trabajando</span>
+                    </div>
+                    <div style="margin-top: 10px; padding: 8px; background: #fff3cd; border-radius: 6px; font-size: 0.75rem; color: #856404;">
+                        <strong>💡 Insight:</strong> Considerar múltiples horarios o sesiones grabadas
+                    </div>
+                </div>
+
+                <div class="text-card">
+                    <div class="text-title">🎯 Temas de Interés</div>
+                    <div class="text-stat"><strong>64</strong> respuestas analizadas</div>
+                    <div class="text-stat">Promedio: <strong>8.0</strong> palabras</div>
+                    <div class="text-stat">Sentimiento: <strong>Neutral</strong> (89.1%) | Score: +0.11</div>
+                    <div style="margin-top: 15px;">
+                        <span class="category-tag">❓ Sin clasificar (Principal)</span>
+                        <span class="category-tag">🔑 Keywords: crecimiento, compañía</span>
+                    </div>
+                    <div style="margin-top: 10px; padding: 8px; background: #d1ecf1; border-radius: 6px; font-size: 0.75rem; color: #0c5460;">
+                        <strong>💡 Oportunidad:</strong> Desarrollar contenido más específico por área
+                    </div>
+                </div>
+
+                <div class="text-card">
+                    <div class="text-title">💭 Comentarios Adicionales</div>
+                    <div class="text-stat"><strong>40</strong> respuestas analizadas</div>
+                    <div class="text-stat">Promedio: <strong>12.7</strong> palabras</div>
+                    <div class="text-stat">Sentimiento: <strong>Neutral-Positivo</strong> (70.0%) | Score: +0.28</div>
+                    <div style="margin-top: 15px;">
+                        <span class="category-tag">🙏 Sin clasificar + Agradecimientos</span>
+                        <span class="category-tag">🔑 Keywords: gracias, reunión</span>
+                    </div>
+                    <div style="margin-top: 10px; padding: 8px; background: #d4edda; border-radius: 6px; font-size: 0.75rem; color: #155724;">
+                        <strong>✅ Fortaleza:</strong> Alto nivel de agradecimiento expresado
+                    </div>
+                </div>
+
+                <div class="text-card">
+                    <div class="text-title">⏱️ Análisis de Engagement</div>
+                    <div class="text-stat">Tiempo respuesta: <strong>3.5 min</strong> (promedio)</div>
+                    <div class="text-stat">Mediana: <strong>1.2 minutos</strong></div>
+                    <div class="text-stat">Rango: <strong>20s - 2.1h</strong></div>
+                    <div style="margin-top: 15px;">
+                        <span class="category-tag">🎯 89% completó en <5 min</span>
+                        <span class="category-tag">⚡ Respuestas rápidas y reflexivas</span>
+                    </div>
+                    <div style="margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 6px; font-size: 0.75rem; color: #495057;">
+                        <strong>📊 Metodología:</strong> Análisis con spaCy + sentiment scoring
+                    </div>
+                </div>
+
+                <div class="text-card" style="grid-column: span 2;">
+                    <div class="text-title">🧠 Insights Automáticos Generados por IA</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div style="background: #fff3cd; padding: 12px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                            <div style="font-weight: 600; color: #856404; margin-bottom: 8px;">⚠️ Barrera Principal Identificada</div>
+                            <div style="font-size: 0.85rem; color: #856404;">
+                                Conflictos de horario/turno son la causa #1 de no participación. 
+                                <strong>Recomendación:</strong> Implementar sesiones grabadas o múltiples horarios.
+                            </div>
+                        </div>
+                        <div style="background: #d1ecf1; padding: 12px; border-radius: 8px; border-left: 4px solid #17a2b8;">
+                            <div style="font-weight: 600; color: #0c5460; margin-bottom: 8px;">📈 Oportunidad de Contenido</div>
+                            <div style="font-size: 0.85rem; color: #0c5460;">
+                                Alta demanda de temas específicos de "crecimiento" y "compañía". 
+                                <strong>Acción:</strong> Desarrollar módulos especializados por área.
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; padding: 12px; background: #e2e3e5; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #383d41; margin-bottom: 5px;">🔬 Análisis Técnico Avanzado</div>
+                        <div style="font-size: 0.8rem; color: #495057;">
+                            Categorización multinivel • Scoring de confianza • Análisis de sentimiento español-optimizado • 
+                            Generación automática de insights • Identificación de keywords contextual
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="insights-section">
+            <h2 class="section-title">🔍 Insights Clave</h2>
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-icon">🎯</div>
+                    <div class="insight-title">Alta Satisfacción General</div>
+                    <div class="insight-text">
+                        Las puntuaciones de satisfacción (4.55/5 general, 4.68/5 video) indican una recepción muy positiva del contenido y formato del evento.
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">📊</div>
+                    <div class="insight-title">Distribución Equilibrada</div>
+                    <div class="insight-text">
+                        La participación está bien distribuida geográficamente, con Zona Centro liderando (49.9%) seguida de Zona Occidente (23.1%).
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">👥</div>
+                    <div class="insight-title">Representación Femenina</div>
+                    <div class="insight-text">
+                        Mayor participación femenina (57.7% vs 42.3%), sugiriendo alta receptividad del contenido entre este segmento.
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">⏰</div>
+                    <div class="insight-title">Barrera Principal: Tiempo</div>
+                    <div class="insight-text">
+                        El 47.9% de las razones de no participación se relacionan con tiempo/horario, indicando oportunidad de mejora en programación.
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">🚀</div>
+                    <div class="insight-title">Oportunidad de Crecimiento</div>
+                    <div class="insight-text">
+                        Con 8.2% de tasa de respuesta, existe potencial significativo para incrementar la participación en futuras encuestas.
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-icon">🎉</div>
+                    <div class="insight-title">Feedback Positivo</div>
+                    <div class="insight-text">
+                        27.5% de comentarios adicionales expresan agradecimientos, reflejando una experiencia positiva y valorada por los participantes.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-text">
+                🤖 Desarrollado con Claude Code by Anthropic por Data Analytics Team | 
+                📊 Procesamiento de Texto: spaCy, NLTK, transformers | 📈 Análisis: pandas, numpy, scikit-learn
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity for web viewing
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate progress bars on scroll
+            const observerOptions = {
+                threshold: 0.3,
+                rootMargin: '0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const progressBars = entry.target.querySelectorAll('.progress-fill');
+                        progressBars.forEach(bar => {
+                            const width = bar.style.width;
+                            bar.style.width = '0%';
+                            setTimeout(() => {
+                                bar.style.width = width;
+                            }, 200);
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.demo-card').forEach(card => {
+                observer.observe(card);
+            });
+
+            // Add click-to-print functionality
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'p') {
+                    e.preventDefault();
+                    window.print();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
